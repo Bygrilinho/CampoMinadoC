@@ -266,7 +266,7 @@ void renderizar(){
             else if(visivel[i][j] == 1){
                 // Se for mina printar M
                 if(numeros[i][j]==-1){
-                    printf("%c%c%c", 77, 77, 179); // "MM│"
+                    printf(" %c%c", 77, 179); // " M│"
                 }
 
                 // Senão printar o número
@@ -276,7 +276,7 @@ void renderizar(){
             }
             // Se for bandeira printar "■"
             else if(visivel[i][j] == 2){
-                printf("%c%c%c", 254, 254, 179); // "■■│"
+                printf(" %c%c", 254, 179); // " ■│"
             }
         }
         printf("\n");
