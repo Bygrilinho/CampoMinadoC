@@ -151,37 +151,37 @@ void jogar(){
     x = x-1;
     y = y-1;
     // Checar se a coordenada eh valida
-    if(x<0 || x>=row || y<0 || y>=col){
+    if(x<0 || x>=col || y<0 || y>=row){
         printf("Coordenada invalida, tente novamente.\n");
         jogar();
     }
-    if(visivel[x][y] == 0){
+    if(visivel[y][x] == 0){
         printf("Digite a acao (r - revelar, m - marcar): ");
         fflush(stdin);
         scanf("%c", &c);
         if(c == 'r'){
-            visivel[x][y] = 1;
+            visivel[y][x] = 1;
         }else if(c == 'm'){
-            visivel[x][y] = 2;
+            visivel[y][x] = 2;
         }else{
             printf("Acao invalida, tente novamente.\n");
             jogar();
         }
     }
     // Checar se a coordenada ja foi revelada
-    else if(visivel[x][y] == 1){
+    else if(visivel[y][x] == 1){
         printf("Coordenada ja revelada, tente novamente.\n");
         jogar();
     }
     // Checar se a coordenada ja foi marcada
-    else if(visivel[x][y] == 2){
+    else if(visivel[y][x] == 2){
         printf("Digite a acao (r - revelar, d - desmarcar): ");
         fflush(stdin);
         scanf("%c", &c);
         if(c == 'r'){
-            visivel[x][y] = 1;
+            visivel[y][x] = 1;
         }else if(c == 'd'){
-            visivel[x][y] = 0;
+            visivel[y][x] = 0;
         }else{
             printf("Acao invalida, tente novamente.\n");
             jogar();
@@ -189,7 +189,7 @@ void jogar(){
     }
     else{
         // Resetar visibilidade (vai que eu fiz alguma merda)
-        visivel[x][y] = 0;
+        visivel[y][x] = 0;
         printf("Erro desconhecido, tente novamente.\n");
         jogar();
     }
@@ -230,41 +230,26 @@ void renderizar(){
     */
 
     //Detectar se o número tem mais de um dígito e printar as coordenadas x
-    if(col>9){
-        for(i=0; i<col; i++){
-            if(i<9){
-                printf(" %d ", coord_x);
-            }else{
-                printf("%d ", coord_x);
-            }
-            coord_x++;
-        }
-    }
-    else{
-        for(i=0; i<col; i++){
+    for(i=0; i<col; i++){
+        if(i<9){
+            printf(" %d ", coord_x);
+        }else{
             printf("%d ", coord_x);
-            coord_x++;
         }
+        coord_x++;
     }
-
+    
     printf("\n");
 
     // Printar a 1a linha de divisao ┌─┬─┐
     printf("   %c", 218); // ┌
-    for(i=0; i<col-1; i++){ // ─┬
-        if(col>9){
-            printf("%c%c%c", 196, 196, 194);
-        }else{
-            printf("%c%c", 196, 194);
-        }
+    for(i=0; i<col-1; i++){ // ──┬
+        printf("%c%c%c", 196, 196, 194);
     }
-    if(col>9){
-        printf("%c%c%c", 196, 196, 191); // ─┐
-    }else{
-        printf("%c%c", 196, 191); // ─┐
-    }
+    printf("%c%c%c", 196, 196, 191); // ──┐
     printf("\n");
-    // Printar linhas de numeros │ │ │
+
+    // Printar linhas de numeros │  │  │
     for(i=0; i<row; i++){
         // Printar a coordenada y
         if(i<9){
@@ -276,77 +261,41 @@ void renderizar(){
         for(j=0; j<col; j++){
             // Se a casa nao foi revelada printar " "
             if(visivel[i][j] == 0){
-                if(col>9){
-                    printf("  %c", 179); // "  │"
-                }else{
-                    printf(" %c", 179); // " │"
-                }
+                printf("  %c", 179); // "  │"
             }
             else if(visivel[i][j] == 1){
                 // Se for mina printar M
                 if(numeros[i][j]==-1){
-                    if(col>9){
-                        printf("%c%c%c", 77, 77, 179); // "MM│"
-                    }else{
-                        printf("%c%c", 77, 179); // "M│"
-                    }
+                    printf("%c%c%c", 77, 77, 179); // "MM│"
                 }
 
                 // Senão printar o número
                 else{
-                    // Detectar se a coordenada tem mais de um digito e printar o numero
-                    if(col>9){
-                        printf(" %d%c", numeros[i][j], 179); // " n│"
-                    }
-                    else{
-                        printf("%d%c", numeros[i][j], 179); // "n│"
-                    }
+                    printf(" %d%c", numeros[i][j], 179); // " n│"
                 }
             }
             // Se for bandeira printar "■"
             else if(visivel[i][j] == 2){
-                if(col>9){
-                    printf("%c%c%c", 254, 254, 179); // "■■│"
-                }
-                else{
-                    printf("%c%c", 254, 179); // "■│"
-                }
+                printf("%c%c%c", 254, 254, 179); // "■■│"
             }
         }
         printf("\n");
-        // Printar as linhas de divisao ├─┼─┤
+        // Printar as linhas de divisao ├──┼──┤
         if(i != row-1){
             printf("   %c", 195);
             for(j=0; j<col-1; j++){
-                if(col>9){
-                    printf("%c%c%c", 196, 196, 197);
-                }
-                else{
-                    printf("%c%c", 196, 197);
-                }
+                printf("%c%c%c", 196, 196, 197);
             }
-            if(col>9){
-                printf("%c%c%c", 196, 196, 180);
-            }else{
-                printf("%c%c", 196, 180);
-            }
+            printf("%c%c%c", 196, 196, 180);
             printf("\n");
         }
     }
-    // Printar a ultima linha de divisao └─┴─┘
+    // Printar a ultima linha de divisao └──┴──┘
     printf("   %c", 192);
     for(i=0; i<col-1; i++){
-        if(col>9){
-            printf("%c%c%c", 196, 196, 193);
-        }else{
-            printf("%c%c", 196, 193);
-        }
+        printf("%c%c%c", 196, 196, 193);
     }
-    if(col>9){
-        printf("%c%c%c", 196, 196, 217);
-    }else{
-        printf("%c%c", 196, 217);
-    }
+    printf("%c%c%c", 196, 196, 217);
 }
 
 void atualizar(){
