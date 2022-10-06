@@ -51,8 +51,8 @@ int main()
         col = 15;
         cont_minas = 40;
     }else if(dificuldade == 3){
-        row = 30;
-        col = 20;
+        row = 20;
+        col = 30;
         cont_minas = 150;
     }else if(dificuldade==0){
         personalizar:
