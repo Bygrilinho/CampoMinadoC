@@ -23,6 +23,8 @@ int inicio, fim, tempo, tempo_seg, tempo_min, tempo_hora; // Variaveis de tempo
 
 int main()
 {
+    //Definir título 
+    SetConsoleTitle("Campo Minado");
     int dificuldade = 0;
     // Zerar matrizes
     for(int i=0; i<ROWMAX; i++)
@@ -364,15 +366,6 @@ void atualizar(){
             if(visivel[i][j] == 1){
                 contv++;
             }
-            // Pode trapaçear colocando bandeira em cima de mina, e depois desmarcando, repetindo isso até ganhar
-            /* if(visivel[i][j] == 2){
-                //Contar bandeiras
-                contb++;
-                //Contar minas marcadas
-                if(minas[i][j] == 1){
-                    contm++;
-                }
-            }*/
         }
     }
     if(contv == (row*col)-cont_minas /*|| (contm == cont_minas && contb == cont_minas)*/){
