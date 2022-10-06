@@ -300,6 +300,52 @@ void renderizar(){
 
 void atualizar(){
     int i, j;
+    // Se o jogador revelou 0, revelar todas as casas adjacentes
+    // Repetir até que a matriz visivel nao seja alterada
+    int alterou = 1;
+    while(alterou){
+        alterou = 0;
+        for(i=0; i<row; i++){
+            for(j=0; j<col; j++){
+                if(visivel[i][j] == 1 && numeros[i][j] == 0){
+                    //Revelar as casas adjacentes
+                    if(i-1 >= 0 && j-1 >= 0 && visivel[i-1][j-1] == 0){
+                        visivel[i-1][j-1] = 1;
+                        alterou = 1;
+                    }
+                    if(i-1 >= 0 && visivel[i-1][j] == 0){
+                        visivel[i-1][j] = 1;
+                        alterou = 1;
+                    }
+                    if(i-1 >= 0 && j+1 < col && visivel[i-1][j+1] == 0){
+                        visivel[i-1][j+1] = 1;
+                        alterou = 1;
+                    }
+                    if(j-1 >= 0 && visivel[i][j-1] == 0){
+                        visivel[i][j-1] = 1;
+                        alterou = 1;
+                    }
+                    if(j+1 < col && visivel[i][j+1] == 0){
+                        visivel[i][j+1] = 1;
+                        alterou = 1;
+                    }
+                    if(i+1 < row && j-1 >= 0 && visivel[i+1][j-1] == 0){
+                        visivel[i+1][j-1] = 1;
+                        alterou = 1;
+                    }
+                    if(i+1 < row && visivel[i+1][j] == 0){
+                        visivel[i+1][j] = 1;
+                        alterou = 1;
+                    }
+                    if(i+1 < row && j+1 < col && visivel[i+1][j+1] == 0){
+                        visivel[i+1][j+1] = 1;
+                        alterou = 1;
+                    }
+                }
+            }
+        }
+    }
+
     // Checar se o jogador perdeu
     for(i=0; i<row; i++){
         for(j=0; j<col; j++){
