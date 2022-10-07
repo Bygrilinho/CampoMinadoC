@@ -147,6 +147,7 @@ void jogar(){
     int x, y;
     char c;
     printf("\nDigite a coordenada (x y): ");
+	fflush(stdin);
     scanf("%d %d", &x, &y);
     x = x-1;
     y = y-1;
