@@ -220,16 +220,6 @@ void renderizar(){
     254 = ■
     */
 
-    /*
-        Nas próximas linhas tem varios if col>9,
-        isso é para printar o tabuleiro corretamente corretamente caso o número tenha mais de um dígito
-
-        2 - 9        10+
-        ┌─┬─┐        ┌──┬──┐
-        │x│x│       │xx│xx│
-        └─┴─┘        └──┴──┘
-    */
-
     //Detectar se o número tem mais de um dígito e printar as coordenadas x
     for(i=0; i<col; i++){
         if(i<9){
