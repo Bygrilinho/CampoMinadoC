@@ -92,7 +92,7 @@ int main()
 
 void gerar_minas(){
     srand(time(NULL)); // Inicializar o gerador de numeros aleatorios
-    int i, j;
+    int i;
     for(i=0; i<cont_minas; i++){
         int x = rand() % row;
         int y = rand() % col;
@@ -149,8 +149,8 @@ void jogar(){
     printf("\nDigite a coordenada (x y): ");
 	fflush(stdin);
     scanf("%d %d", &x, &y);
-    x = x-1;
-    y = y-1;
+    x -= 1;
+    y -= 1;
     // Checar se a coordenada eh valida
     if(x<0 || x>=col || y<0 || y>=row){
         printf("Coordenada invalida, tente novamente.\n");
@@ -244,9 +244,9 @@ void renderizar(){
     for(i=0; i<row; i++){
         // Printar a coordenada y
         if(i<9){
-            printf(" %d %c", coord_y, 179); // yy │
+            printf(" %d %c", coord_y, 179); // " y │"
         }else{
-            printf("%d %c", coord_y, 179); //  y │
+            printf("%d %c", coord_y, 179); // "yy │"
         }
         coord_y++;
         for(j=0; j<col; j++){
@@ -346,7 +346,7 @@ void atualizar(){
         }
     }
     // Checar se o jogador ganhou
-    int contv = 0, contb = 0, contm = 0;
+    int contv = 0;
     for(i=0; i<row; i++){
         for(j=0; j<col; j++){
             if(visivel[i][j] == 1){
@@ -354,7 +354,7 @@ void atualizar(){
             }
         }
     }
-    if(contv == (row*col)-cont_minas /*|| (contm == cont_minas && contb == cont_minas)*/){
+    if(contv == (row*col)-cont_minas){
         game_win();
     }
 }
