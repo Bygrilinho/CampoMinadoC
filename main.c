@@ -5,6 +5,22 @@
 #define ROWMAX 30 // Numero máximo de linhas
 #define COLMAX 30 // Numero máximo de colunas
 
+#define COLOR_LIGHT_RED     "\033[1;31m"
+#define COLOR_LIGHT_GREEN   "\033[1;32m"
+#define COLOR_LIGHT_YELLOW  "\033[1;33m"
+#define COLOR_LIGHT_BLUE    "\033[1;34m"
+#define COLOR_LIGHT_MAGENTA "\033[1;35m"
+#define COLOR_LIGHT_CYAN    "\033[1;36m"
+#define COLOR_LIGHT_RESET   "\033[0m"
+
+#define COLOR_RED           "\x1b[31m"
+#define COLOR_GREEN         "\x1b[32m"
+#define COLOR_YELLOW        "\x1b[33m"
+#define COLOR_BLUE          "\x1b[34m"
+#define COLOR_MAGENTA       "\x1b[35m"
+#define COLOR_CYAN          "\x1b[36m"
+#define COLOR_RESET         "\x1b[0m"
+
 void gerar_minas();
 void gerar_numeros();
 void jogar();
@@ -22,7 +38,8 @@ int minas[ROWMAX][COLMAX]; // Matriz de minas
 int inicio, fim, tempo, tempo_seg, tempo_min, tempo_hora; // Variaveis de tempo
 
 int main()
-{
+{  
+    system("chcp 65001"); // Para funcionar acentos
     //Definir título 
     SetConsoleTitle("Campo Minado");
     int dificuldade = 0;
@@ -233,60 +250,98 @@ void renderizar(){
     printf("\n");
 
     // Printar a 1a linha de divisao ┌─┬─┐
-    printf("   %c", 218); // ┌
+    printf("   ┌"); // ┌
     for(i=0; i<col-1; i++){ // ──┬
-        printf("%c%c%c", 196, 196, 194);
+        printf("──┬");
     }
-    printf("%c%c%c", 196, 196, 191); // ──┐
+    printf("──┐"); // ──┐
     printf("\n");
 
     // Printar linhas de numeros │  │  │
     for(i=0; i<row; i++){
         // Printar a coordenada y
         if(i<9){
-            printf(" %d %c", coord_y, 179); // " y │"
+            printf(" %d │", coord_y); // " y │"
         }else{
-            printf("%d %c", coord_y, 179); // "yy │"
+            printf("%d │", coord_y); // "yy │"
         }
         coord_y++;
         for(j=0; j<col; j++){
             // Se a casa nao foi revelada printar " "
             if(visivel[i][j] == 0){
-                printf("  %c", 179); // "  │"
+                printf("  │"); // "  │"
             }
             else if(visivel[i][j] == 1){
                 // Se for mina printar M
                 if(numeros[i][j]==-1){
-                    printf(" %c%c", 77, 179); // " M│"
+                    printf(COLOR_LIGHT_RED" M"COLOR_RESET"│"); // " M│"
                 }
 
                 // Senão printar o número
                 else{
-                    printf(" %d%c", numeros[i][j], 179); // " n│"
+                    switch (numeros[i][j])
+                    {
+                    case 1:
+                        printf(COLOR_LIGHT_BLUE" %d"COLOR_RESET"│", numeros[i][j]); // " n│"
+                        break;
+                    
+                    case 2:
+                        printf(COLOR_GREEN" %d"COLOR_RESET"│", numeros[i][j]); // " n│"
+                        break;
+
+                    case 3:
+                        printf(COLOR_RED" %d"COLOR_RESET"│", numeros[i][j]); // " n│"
+                        break;
+
+                    case 4:
+                        printf(COLOR_BLUE" %d"COLOR_RESET"│", numeros[i][j]); // " n│"
+                        break;
+
+                    case 5:
+                        printf(COLOR_MAGENTA" %d"COLOR_RESET"│", numeros[i][j]); // " n│"
+                        break;
+
+                    case 6:
+                        printf(COLOR_CYAN" %d"COLOR_RESET"│", numeros[i][j]); // " n│"
+                        break;
+
+                    case 7:
+                        printf(COLOR_YELLOW" %d"COLOR_RESET"│", numeros[i][j]); // " n│"
+                        break;
+
+                    case 8:
+                        printf(COLOR_LIGHT_RED" %d"COLOR_RESET"│", numeros[i][j]); // " n│"
+                        break;
+                    default:
+                        printf(" %d│", numeros[i][j]); // " n│"
+                        break;
+                    }
+
+                    // printf(" %d%c", numeros[i][j], 179); // " n│"
                 }
             }
             // Se for bandeira printar "■"
             else if(visivel[i][j] == 2){
-                printf(" %c%c", 254, 179); // " ■│"
+                printf(COLOR_LIGHT_YELLOW" ■"COLOR_RESET"│"); // " ■│"
             }
         }
         printf("\n");
         // Printar as linhas de divisao ├──┼──┤
         if(i != row-1){
-            printf("   %c", 195);
+            printf("   ├");
             for(j=0; j<col-1; j++){
-                printf("%c%c%c", 196, 196, 197);
+                printf("──┼");
             }
-            printf("%c%c%c", 196, 196, 180);
+            printf("──┤");
             printf("\n");
         }
     }
     // Printar a ultima linha de divisao └──┴──┘
-    printf("   %c", 192);
+    printf("   └");
     for(i=0; i<col-1; i++){
-        printf("%c%c%c", 196, 196, 193);
+        printf("──┴");
     }
-    printf("%c%c%c", 196, 196, 217);
+    printf("──┘");
 }
 
 void atualizar(){
