@@ -21,6 +21,7 @@
 #define COLOR_CYAN          "\x1b[36m"
 #define COLOR_RESET         "\x1b[0m"
 
+void start();
 void primeira_jogada();
 void gerar_minas();
 void gerar_numeros();
@@ -31,6 +32,7 @@ void game_over();
 void game_win();
 void exibir_tempo();
 
+int debug = 0; // 0 = desligado, 1 = ligado
 int row, col; // Tamanho do tabuleiro
 int cont_minas; // Quantidade de minas
 int visivel[ROWMAX][COLMAX]; // Matriz de visibilidade
@@ -38,11 +40,24 @@ int numeros[ROWMAX][COLMAX]; // Matriz de numeros
 int minas[ROWMAX][COLMAX]; // Matriz de minas
 int inicio, fim, tempo, tempo_seg, tempo_min, tempo_hora; // Variaveis de tempo
 
-int main()
-{  
+int main(int argc, char *argv[]){
     system("chcp 65001"); // Para funcionar acentos
     //Definir título 
     SetConsoleTitle("Campo Minado");
+    system("cls");
+    if(argc > 1)
+    {
+        if(strcmp(argv[1], "-d") == 0)
+        {
+            debug = 1;
+            printf("Debug ligado\n\n");
+        }
+    }
+    start();
+    return 0;
+}
+
+void start(){  
     int dificuldade = 0;
     // Zerar matrizes
     for(int i=0; i<ROWMAX; i++)
@@ -54,7 +69,6 @@ int main()
             minas[i][j] = 0;
         }
     }
-    system("cls");
     printf("Campo Minado\n\n");
 
     printf("Escolha uma dificuldade (1-3, 0 para personalizada): ");
@@ -167,19 +181,27 @@ void gerar_minas(int x1, int y1){
     srand(time(NULL)); // Inicializar o gerador de numeros aleatorios
     printf("Gerando minas...\n");
     int i;
+    if(debug==1) printf(COLOR_LIGHT_YELLOW"Jogada inicial em      (%d, %d)\n"COLOR_RESET, x1+1, y1+1);
+
     // Checar se é possivel gerar minas com 0 minas ao redor da primeira jogada
     if(row*col-8 < cont_minas){
+        if(debug==1) printf(COLOR_LIGHT_RED"Impossivel gerar minas com 0 minas ao redor da primeira jogada\n"COLOR_RESET);
+        if(debug==1) printf(COLOR_LIGHT_YELLOW"Gerando minas...\n"COLOR_RESET);
         // Gerar minas aleatoriamente se nao for possivel gerar com 0 minas ao redor
-    for(i=0; i<cont_minas; i++){
+        for(i=0; i<cont_minas; i++){
             int x = rand() % col;
             int y = rand() % row;
             if(minas[y][x] == 1 || (x == x1 && y == y1)){ // Se ja tiver uma mina, ou se for na primeira jogada, tentar novamente
-            i--;
-        }else{
+                if(debug==1) printf(COLOR_LIGHT_RED"Falha ao gerar mina em (%d, %d)\n"COLOR_RESET, x+1, y+1);
+                i--;
+            }else{
                 minas[y][x] = 1; // Se nao tiver, colocar uma mina
+                if(debug==1) printf(COLOR_LIGHT_GREEN"Mina colocada em       (%d, %d)\n"COLOR_RESET, x+1, y+1);
             }
         }
     }else{
+        if(debug==1) printf(COLOR_LIGHT_GREEN"É possivel gerar minas com 0 minas ao redor da primeira jogada!\n"COLOR_RESET);
+        if(debug==1) printf(COLOR_LIGHT_YELLOW"Gerando minas...\n"COLOR_RESET);
         // Não gerar em volta da primeira jogada
         for(i=0; i<cont_minas; i++){
             int x = rand() % col;
@@ -187,12 +209,15 @@ void gerar_minas(int x1, int y1){
             if(minas[y][x] == 1){ // Se ja tiver uma mina, ou se for em volta da primeira jogada, tentar novamente
                 i--;
             }else if((x == x1 && y == y1) || (x == x1+1 && y == y1) || (x == x1-1 && y == y1) || (x == x1 && y == y1+1) || (x == x1 && y == y1-1) || (x == x1+1 && y == y1+1) || (x == x1-1 && y == y1-1) || (x == x1+1 && y == y1-1) || (x == x1-1 && y == y1+1)){ // Se ja tiver uma mina, ou se for em volta da primeira jogada, tentar novamente
+                if(debug==1) printf(COLOR_LIGHT_RED"Falha ao gerar mina em (%d, %d)\n"COLOR_RESET, x+1, y+1);
                 i--;
             }else {
                 minas[y][x] = 1; // Se nao tiver, colocar uma mina
+                if(debug==1) printf(COLOR_LIGHT_GREEN"Mina colocada em       (%d, %d)\n"COLOR_RESET, x+1, y+1);
+            }
         }
     }
-    }
+    if(debug==1) system("pause");
 }
 
 void gerar_numeros(){
@@ -507,7 +532,7 @@ void game_over(){
     fflush(stdin);
     scanf("%c", &c);
     if(c == 's'){
-        main();
+        start();
     }else{
         exit(0);
     }
@@ -532,7 +557,7 @@ void game_win(){
     fflush(stdin);
     scanf("%c", &c);
     if(c == 's'){
-        main();
+        start();
     }else{
         exit(0);
     }
