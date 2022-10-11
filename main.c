@@ -21,6 +21,7 @@
 #define COLOR_CYAN          "\x1b[36m"
 #define COLOR_RESET         "\x1b[0m"
 
+void primeira_jogada();
 void gerar_minas();
 void gerar_numeros();
 void jogar();
@@ -94,11 +95,13 @@ int main()
     }
 
     // Geração do jogo
-    gerar_minas();
-    gerar_numeros();
-    renderizar();
-
     inicio = clock(); // Iniciar o cronometro
+
+    renderizar();
+    primeira_jogada();
+    gerar_numeros();
+    atualizar();
+    renderizar();
 
     while(1){
         jogar();
@@ -107,17 +110,88 @@ int main()
     }
 }
 
-void gerar_minas(){
+void primeira_jogada(){
+    int x, y;
+    char c;
+    printf("\nDigite a coordenada (x y): ");
+	fflush(stdin);
+    scanf("%d %d", &x, &y);
+    x -= 1;
+    y -= 1;
+    if(x<0 || x>=col || y<0 || y>=row){
+        printf("Coordenada invalida, tente novamente.\n");
+        primeira_jogada();
+    }
+    if(visivel[y][x] == 0){
+        printf("Digite a acao (r - revelar, m - marcar): ");
+        fflush(stdin);
+        scanf("%c", &c);
+        if(c == 'r'){
+            visivel[y][x] = 1;
+            gerar_minas(x, y);
+        }else if(c == 'm'){
+            visivel[y][x] = 2;
+            renderizar();
+            primeira_jogada();
+        }else{
+            printf("Acao invalida, tente novamente.\n");
+            primeira_jogada();
+        }
+    }
+    // Checar se a coordenada ja foi marcada
+    else if(visivel[y][x] == 2){
+        printf("Digite a acao (r - revelar, d - desmarcar): ");
+        fflush(stdin);
+        scanf("%c", &c);
+        if(c == 'r'){
+            visivel[y][x] = 1;
+            gerar_minas(x, y);
+        }else if(c == 'd'){
+            visivel[y][x] = 0;
+            renderizar();
+            primeira_jogada();
+        }else{
+            printf("Acao invalida, tente novamente.\n");
+            primeira_jogada();
+        }
+    }
+    else{
+        // Resetar visibilidade (vai que eu fiz alguma merda)
+        visivel[y][x] = 0;
+        printf("Erro desconhecido, tente novamente.\n");
+        primeira_jogada();
+    }
+}
+
+void gerar_minas(int x1, int y1){
     srand(time(NULL)); // Inicializar o gerador de numeros aleatorios
+    printf("Gerando minas...\n");
     int i;
+    // Checar se é possivel gerar minas com 0 minas ao redor da primeira jogada
+    if(row*col-8 < cont_minas){
+        // Gerar minas aleatoriamente se nao for possivel gerar com 0 minas ao redor
     for(i=0; i<cont_minas; i++){
-        int x = rand() % row;
-        int y = rand() % col;
-        if(minas[x][y] == 1){ // Se ja tiver uma mina, tentar novamente
+            int x = rand() % col;
+            int y = rand() % row;
+            if(minas[y][x] == 1 || (x == x1 && y == y1)){ // Se ja tiver uma mina, ou se for na primeira jogada, tentar novamente
             i--;
         }else{
-            minas[x][y] = 1; // Se nao tiver, colocar uma mina
+                minas[y][x] = 1; // Se nao tiver, colocar uma mina
+            }
         }
+    }else{
+        // Não gerar em volta da primeira jogada
+        for(i=0; i<cont_minas; i++){
+            int x = rand() % col;
+            int y = rand() % row;
+            if(minas[y][x] == 1){ // Se ja tiver uma mina, ou se for em volta da primeira jogada, tentar novamente
+                i--;
+            }else if((x == x1 && y == y1) || (x == x1+1 && y == y1) || (x == x1-1 && y == y1) || (x == x1 && y == y1+1) || (x == x1 && y == y1-1) || (x == x1+1 && y == y1+1) || (x == x1-1 && y == y1-1) || (x == x1+1 && y == y1-1) || (x == x1-1 && y == y1+1)){ // Se ja tiver uma mina, ou se for em volta da primeira jogada, tentar novamente
+                i--;
+            }else {
+                minas[y][x] = 1; // Se nao tiver, colocar uma mina
+        }
+    }
     }
 }
 
