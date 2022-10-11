@@ -536,6 +536,7 @@ void game_over(){
     fflush(stdin);
     scanf("%c", &c);
     if(c == 's'){
+        system("cls");
         start();
     }else{
         exit(0);
@@ -561,6 +562,7 @@ void game_win(){
     fflush(stdin);
     scanf("%c", &c);
     if(c == 's'){
+        system("cls");
         start();
     }else{
         exit(0);
