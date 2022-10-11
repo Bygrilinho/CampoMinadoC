@@ -73,6 +73,7 @@ void start(){
 
     printf("Escolha uma dificuldade (1-3, 0 para personalizada): ");
     dificuldade:
+    fflush(stdin);
     scanf("%d", &dificuldade);
     if(dificuldade == 1){
         row = 8;
@@ -89,10 +90,13 @@ void start(){
     }else if(dificuldade==0){
         personalizar:
         printf("Digite o numero de linhas (min 2, max %d): ", ROWMAX);
+        fflush(stdin);
         scanf("%d", &row);
         printf("Digite o numero de colunas (min 2, max %d): ", COLMAX);
+        fflush(stdin);
         scanf("%d", &col);
         printf("Digite o numero de minas (min 1): ");
+        fflush(stdin);
         scanf("%d", &cont_minas);
         if(row<2 || col<2 || row>ROWMAX || col>COLMAX){
             printf("Tamanho invalido, tente novamente.\n\n");
